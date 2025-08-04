@@ -7,5 +7,5 @@ data class Person(
 )
 
 enum class Gender {
-    MALE, FEMALE, UNKNOWN // * Enum class is mostly used to represent a fixed set of values
+    MALE, FEMALE, UNKNOWN
 }

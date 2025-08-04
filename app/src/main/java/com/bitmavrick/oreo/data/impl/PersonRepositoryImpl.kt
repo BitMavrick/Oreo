@@ -22,7 +22,7 @@ class PersonRepositoryImpl @Inject constructor() : PersonRepository {
         }else{
             val name = names.random()
             val age = (1 .. 80).random()
-            val gender = Gender.values().random()
+            val gender = Gender.entries.toTypedArray().random()
 
             Result.success(Person(name, age, gender))
         }

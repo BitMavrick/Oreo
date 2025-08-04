@@ -29,12 +29,12 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(uiState.errorMessage, uiState.number) {
+    LaunchedEffect(uiState.errorMessage, uiState.person) {
         uiState.errorMessage?.let {
             snackbarHostState.showSnackbar("Network error: $it")
         }
-        uiState.number?.let {
-            snackbarHostState.showSnackbar("Fetched number: $it")
+        uiState.person?.let {
+            snackbarHostState.showSnackbar("Fetched: ${it.name}, ${it.age}, ${it.gender}")
         }
     }
 
@@ -44,8 +44,8 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 title = { Text("Oreo App") },
                 actions = {
                     IconButton(
-                        enabled = !viewModel.isRefreshing,
-                        onClick = { viewModel.refresh() }
+                        enabled = !uiState.isLoading,
+                        onClick = { viewModel.onEvent(MainUiEvent.Refresh) }
                     ) {
                         Icon(Icons.Default.Refresh, contentDescription = "Manual Refresh")
                     }
@@ -56,8 +56,8 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     ) { padding ->
         PullToRefreshBox(
             modifier = Modifier.padding(padding),
-            isRefreshing = viewModel.isRefreshing,
-            onRefresh = { viewModel.refresh() }
+            isRefreshing = uiState.isLoading,
+            onRefresh = { viewModel.onEvent(MainUiEvent.Refresh) }
         ) {
             LazyColumn(
                 Modifier.fillMaxSize(),
@@ -65,14 +65,14 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 item {
-                    if (uiState.number != null) {
+                    if (uiState.person != null) {
                         Text(
-                            text = "Number: ${uiState.number}",
+                            text = "Name: ${uiState.person.name}",
                             style = MaterialTheme.typography.headlineSmall
                         )
                     } else {
                         Text(
-                            text = "Pull down to fetch a number",
+                            text = "Pull down to fetch a person",
                             style = MaterialTheme.typography.headlineSmall
                         )
                     }
