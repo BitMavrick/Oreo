@@ -29,14 +29,13 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(uiState.errorMessage, uiState.person) {
-        uiState.errorMessage?.let {
-            snackbarHostState.showSnackbar("Network error: $it")
-        }
-        uiState.person?.let {
-            snackbarHostState.showSnackbar("Fetched: ${it.name}, ${it.age}, ${it.gender}")
+    LaunchedEffect(uiState.uiMessage) {
+        uiState.uiMessage?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            viewModel.onEvent(MainUiEvent.ClearUiMessages)
         }
     }
+
 
     Scaffold(
         topBar = {

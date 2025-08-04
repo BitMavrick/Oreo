@@ -21,71 +21,43 @@ class MainViewModel @Inject constructor(
     fun onEvent(event: MainUiEvent){
         when(event){
             is MainUiEvent.Refresh -> fetchPerson()
+            is MainUiEvent.ClearUiMessages -> clearMessage()
         }
     }
 
     private fun fetchPerson(){
         viewModelScope.launch {
-            uiState = uiState.copy(isLoading = true)
+            uiState = uiState.copy(
+                isLoading = true,
+                errorMessage = null,
+                uiMessage = null
+            )
 
             val result = repository.fetchRandomPerson()
+
             uiState = if(result.isSuccess){
+                val person = result.getOrNull()
                 MainUiState(
-                    person = result.getOrNull(),
-                    isLoading = false
+                    person = person,
+                    isLoading = false,
+                    uiMessage = "Fetched: ${person?.name}, ${person?.age}, ${person?.gender}"
                 )
             } else {
                 MainUiState(
                     isLoading = false,
-                    errorMessage = result.exceptionOrNull()?.message
+                    uiMessage = "Network error: ${result.exceptionOrNull()?.message}",
+                    errorMessage = result.exceptionOrNull()?.message,
                 )
             }
         }
     }
 
+    private fun clearMessage(){
+        uiState = uiState.copy(uiMessage = null)
+    }
+
     init {
-        viewModelScope.launch {
-            fetchPerson()
-        }
+        fetchPerson()
     }
 }
 
-
-/*
-private val refreshRequests = Channel<Unit>(Channel.CONFLATED)
-
-    var uiState by mutableStateOf(MainUiState())
-        private set
-
-    init {
-        viewModelScope.launch {
-            for (refresh in refreshRequests) {
-                refreshData()
-            }
-        }
-    }
-
-    val isRefreshing: Boolean
-        get() = uiState.isLoading
-
-    fun refresh() {
-        refreshRequests.trySend(Unit)
-    }
-
-    private suspend fun refreshData() {
-        uiState = uiState.copy(isLoading = true, errorMessage = null)
-        val result = repository.fetchRandomNumber()
-        uiState = when {
-            result.isSuccess -> {
-                MainUiState(number = result.getOrNull(), isLoading = false)
-            }
-
-            else -> {
-                MainUiState(
-                    isLoading = false,
-                    errorMessage = result.exceptionOrNull()?.message ?: "Unknown error"
-                )
-            }
-        }
-    }
- */
