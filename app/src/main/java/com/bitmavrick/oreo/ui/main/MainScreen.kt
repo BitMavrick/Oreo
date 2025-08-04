@@ -19,7 +19,7 @@ fun MainScreen(
 ) {
     val uiState = viewModel.uiState
 
-    MainScreenCompose(
+    MainScreenContent(
         uiState = uiState,
         onEvent = viewModel::onEvent
     )
@@ -28,7 +28,7 @@ fun MainScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreenCompose(
+fun MainScreenContent(
     uiState: MainUiState,
     onEvent: (MainUiEvent) -> Unit
 ){
@@ -37,7 +37,7 @@ fun MainScreenCompose(
     LaunchedEffect(uiState.uiMessage) {
         uiState.uiMessage?.let { message ->
             snackbarHostState.showSnackbar(message)
-            onEvent(MainUiEvent.ClearUiMessages)
+            onEvent(MainUiEvent.SnackbarShown)
         }
     }
 
@@ -62,7 +62,7 @@ fun MainScreenCompose(
 @Composable
 private fun MainScreenPreview(){
     OreoTheme {
-        MainScreenCompose(
+        MainScreenContent(
             uiState = MainUiState(),
             onEvent = {}
         )

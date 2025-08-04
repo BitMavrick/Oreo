@@ -21,7 +21,7 @@ class MainViewModel @Inject constructor(
     fun onEvent(event: MainUiEvent){
         when(event){
             is MainUiEvent.Refresh -> fetchPerson()
-            is MainUiEvent.ClearUiMessages -> clearMessage()
+            is MainUiEvent.SnackbarShown -> clearMessage()
         }
     }
 
