@@ -59,11 +59,11 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // * Additional libraries
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.material.icon.extended)
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 
-    implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
-    implementation("com.google.accompanist:accompanist-swiperefresh:0.31.5-beta")
+
 }

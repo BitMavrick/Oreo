@@ -3,13 +3,18 @@ package com.bitmavrick.oreo.ui.main
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -17,52 +22,57 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
-    val state = viewModel.uiState
+    val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(state.errorMessage, state.number) {
-        state.errorMessage?.let {
-            snackbarHostState.showSnackbar("Error: $it")
+    // Snackbar display effect
+    LaunchedEffect(uiState.errorMessage, uiState.number) {
+        uiState.errorMessage?.let {
+            snackbarHostState.showSnackbar("Network error: $it")
         }
-        state.number?.let {
+        uiState.number?.let {
             snackbarHostState.showSnackbar("Fetched number: $it")
         }
     }
 
     Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Oreo App") },
+                actions = {
+                    IconButton(
+                        enabled = !viewModel.isRefreshing,
+                        onClick = { viewModel.refresh() }
+                    ) {
+                        Icon(Icons.Default.Refresh, contentDescription = "Manual Refresh")
+                    }
+                }
+            )
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
-        SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = state.isLoading),
-            onRefresh = { viewModel.onEvent(MainUiEvent.Refresh) },
-            modifier = Modifier.padding(padding)
+        PullToRefreshBox(
+            modifier = Modifier.padding(padding),
+            isRefreshing = viewModel.isRefreshing,
+            onRefresh = { viewModel.refresh() }
         ) {
             Box(
-                modifier = Modifier
+                Modifier
                     .fillMaxSize()
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                if (state.isLoading) {
-                    CircularProgressIndicator()
-                } else {
+                if (uiState.number != null) {
                     Text(
-                        text = state.number?.toString() ?: "Pull to fetch number",
+                        text = "Number: ${uiState.number}",
                         style = MaterialTheme.typography.headlineMedium
                     )
-
-                    Button(
-                        onClick = {
-                            viewModel.onEvent(MainUiEvent.Refresh)
-                        }
-                    ) {
-                        Text("Refresh")
-                    }
+                } else {
+                    Text("Pull down to fetch a number")
                 }
             }
         }
