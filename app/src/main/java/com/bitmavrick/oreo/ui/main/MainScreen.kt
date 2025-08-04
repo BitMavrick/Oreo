@@ -36,7 +36,10 @@ fun MainScreenContent(
 
     LaunchedEffect(uiState.uiMessage) {
         uiState.uiMessage?.let { message ->
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showSnackbar(
+                message = message,
+                withDismissAction = true
+            )
             onEvent(MainUiEvent.SnackbarShown)
         }
     }
