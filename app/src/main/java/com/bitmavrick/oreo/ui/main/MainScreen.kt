@@ -1,8 +1,9 @@
 package com.bitmavrick.oreo.ui.main
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,7 +21,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3Api::class)
@@ -29,7 +29,6 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
     val uiState = viewModel.uiState
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // Snackbar display effect
     LaunchedEffect(uiState.errorMessage, uiState.number) {
         uiState.errorMessage?.let {
             snackbarHostState.showSnackbar("Network error: $it")
@@ -60,19 +59,23 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
             isRefreshing = viewModel.isRefreshing,
             onRefresh = { viewModel.refresh() }
         ) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
+            LazyColumn(
+                Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if (uiState.number != null) {
-                    Text(
-                        text = "Number: ${uiState.number}",
-                        style = MaterialTheme.typography.headlineMedium
-                    )
-                } else {
-                    Text("Pull down to fetch a number")
+                item {
+                    if (uiState.number != null) {
+                        Text(
+                            text = "Number: ${uiState.number}",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    } else {
+                        Text(
+                            text = "Pull down to fetch a number",
+                            style = MaterialTheme.typography.headlineSmall
+                        )
+                    }
                 }
             }
         }
