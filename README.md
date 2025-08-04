@@ -9,7 +9,7 @@ Oreo is a minimalist Android demo app built with **Jetpack Compose**, following 
 ## 🧠 Features
 
 - 📱 One-screen Compose UI using `Scaffold`
-- 🔁 Pull-to-refresh support with Accompanist
+- 🔁 Pull-to-refresh support
 - 🍀 Random number generation simulating fake network requests
 - ⏱️ 2-3 seconds simulated network delay
 - 🚨 Error simulation with snackbar feedback
