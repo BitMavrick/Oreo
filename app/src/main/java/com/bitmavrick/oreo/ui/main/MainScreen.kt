@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.bitmavrick.oreo.ui.main.components.MainTopBar
 import com.bitmavrick.oreo.ui.theme.OreoTheme
 @Composable
 fun MainScreen(
@@ -54,16 +55,9 @@ fun MainScreenCompose(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Oreo") },
-                actions = {
-                    IconButton(
-                        enabled = !uiState.isLoading,
-                        onClick = { onEvent(MainUiEvent.Refresh) }
-                    ) {
-                        Icon(Icons.Default.Refresh, contentDescription = "Manual Refresh")
-                    }
-                }
+            MainTopBar(
+                enabled = !uiState.isLoading,
+                onRefreshClick = { onEvent(MainUiEvent.Refresh) }
             )
         },
         snackbarHost = { SnackbarHost(snackbarHostState) }
