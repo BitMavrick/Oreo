@@ -20,12 +20,12 @@ Oreo is a minimalist Android demo app built with **Jetpack Compose**, following 
 
 ## 🧱 Tech Stack
 
-| Layer         | Technology                         |
-|--------------|-------------------------------------|
-| UI           | Jetpack Compose, Accompanist SwipeRefresh |
+| Layer         | Technology                             |
+|--------------|----------------------------------------|
+| UI           | Jetpack Compose, Material 3            |
 | State Mgmt   | ViewModel, MutableState, UiState/Event |
-| DI           | Hilt (Dagger)                       |
-| Language     | Kotlin                              |
-| Architecture | MVVM, SOLID principles              |
+| DI           | Hilt (Dagger)                          |
+| Language     | Kotlin                                 |
+| Architecture | MVVM, SOLID principles                 |
 
 ---
