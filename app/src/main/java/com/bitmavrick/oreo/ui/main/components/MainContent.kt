@@ -41,7 +41,7 @@ fun MainContent(
                     )
                 } else {
                     Text(
-                        text = "Pull down to fetch a person",
+                        text = "Please refresh",
                         style = MaterialTheme.typography.headlineSmall
                     )
                 }

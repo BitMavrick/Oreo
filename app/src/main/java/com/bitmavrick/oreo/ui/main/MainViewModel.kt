@@ -17,7 +17,6 @@ class MainViewModel @Inject constructor(
     var uiState  by mutableStateOf(MainUiState())
         private set
 
-
     fun onEvent(event: MainUiEvent){
         when(event){
             is MainUiEvent.Refresh -> fetchPerson()
